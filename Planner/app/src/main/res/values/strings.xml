@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">Planner</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_edit">Settings</string>
+
+    <string name="plan">计划</string>
+    <string name="goal">目标</string>
+    <string name="new_plan">新建计划</string>
+    <string name="plan_detail">计划详情</string>
+    <string name="plan_progress">计划</string>
+    <string name="plan_time_progress">时间</string>
+
+    <string name="plan_content_description"> &#160;我们的计划无懈可击！</string>
+    <string name="plan_goal_description"> &#160;想要达到的效果！</string>
+    <string name="plan_memo_description"> &#160;额外说明！</string>
+    <string name="plan_date_range">时间(3天)</string>
+    <string name="plan_status_priority">状态&amp;标签</string>
+
+
+    <string name="plan_memo"> 备注</string>
+    <string name="new_plan_tip1">第一纵队</string>
+    <string name="new_plan_tip2">第二纵队</string>
+    <string name="new_plan_tip3">第三纵队</string>
+    <string name="plan_starttime_text">开始</string>
+    <string name="plan_endtime_text">结束</string>
+    <string name="status">状态</string>
+    <string name="delete_warn">如果删除此任务,子任务都将删除！</string>
+
+    <string-array name="planStatus_items">
+        <item id="0">未开始</item>
+        <item id="1">进行中</item>
+        <item id="2">暂停</item>
+    </string-array>
+
+    <string-array name="planPriority_items">
+        <item id="0">战略规划</item>
+        <item id="1">滴水穿石</item>
+        <item id="2">三省吾身</item>
+        <item id="3">重点突破</item>
+        <item id="4">分进合击</item>
+        <item id="5">多线并进</item>
+
+    </string-array>
+
+    <string name="plan_progress_display">&#160;&#160;&#160;&#160;&#160;&#160;计划进度&#160;&#160;</string>
+    <!--图标字体-->
+    <string name="project_progress_iconfont">&#xe6e7;</string>
+    <string name="date_arrow_iconfont">&#xe6db;</string>
+    <string name="arrow_up">&#xe605;</string>
+    <string name="arrow_down">&#xe694;</string>
+    <string name="ic_right_arrow">&#xe65c;</string>
+    <!--项目添加-->
+    <string name="add_icon">&#xe60c;</string>
+
+</resources>

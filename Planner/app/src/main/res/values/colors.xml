@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 主题一:靛蓝色 -->
+ <!--   <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>-->
+
+    <!-- 主题二:天蓝色 -->
+    <!--<color name="colorPrimary">#03a9f4</color>
+    <color name="colorPrimaryDark">#0288d1</color>
+    <color name="colorAccent">#FF4081</color>-->
+
+    <!-- 主题一:草绿色 -->
+    <!--<color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#009688</color>
+    <color name="colorAccent">#FFF</color>-->
+
+    <!-- 主题一:墨绿色 263238 21272b 009384-->
+    <color name="colorPrimary">#37474f</color>
+    <color name="colorPrimaryDark">#263238</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000</color>
+
+   <color name="fontblack">#95000000</color>
+    <color name="secondfont">#87000000</color>
+
+    <color name="gray">#333333</color>
+    <color name="gray_font">#737373</color>
+    <color name="grass_green">#00cc82</color>
+    <color name="blue_green">#009688</color>
+    <color name="blue">#2E87C1</color>
+
+    <color name="def_white">#e6e6e6</color>
+    <!--淡蓝色-->
+    <color name="light_blue">#c4e7ff</color>
+    <!--橘红色-->
+    <color name="orange_red">#eb6460</color>
+    <!--亮绿色-->
+    <color name="light_blue_green">#10b4a5</color>
+    <!--土黄色-->
+    <color name="orange_yellow">#ff8c6a</color>
+    <!--梦幻紫-->
+    <color name="purple">#7c57e4</color>
+    <!--天蓝色-->
+    <color name="blue_sky">#00bcd4</color>
+</resources>
