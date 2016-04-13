@@ -13,10 +13,12 @@
     <string name="plan_detail">计划详情</string>
     <string name="plan_progress">计划</string>
     <string name="plan_time_progress">时间</string>
+    <string name="plan_breakdown">分解计划</string>
 
     <string name="plan_content_description"> &#160;我们的计划无懈可击！</string>
     <string name="plan_goal_description"> &#160;想要达到的效果！</string>
     <string name="plan_memo_description"> &#160;额外说明！</string>
+    <string name="plan_breakdown_des">需要分解计划吗?</string>
     <string name="plan_date_range">时间(3天)</string>
     <string name="plan_status_priority">状态&amp;标签</string>
 

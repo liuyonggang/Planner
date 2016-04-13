@@ -18,10 +18,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.lyg.planner.Activity.SubPlanActivity;
 import com.lyg.planner.dao.PlanDao;
 import com.lyg.planner.model.Plan;
 import com.lyg.planner.util.DatabaseHelper;
@@ -54,13 +56,14 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
     private DateTime endDT;
     private TextView projectStartTime,projectEndTime;
 
-    private FloatingActionButton completeBtn,deleteBtn;
+    private FloatingActionButton completeBtn,deleteBtn,breakdownBtn;
     private ImageView icPriority;
 
     private boolean isEdit = false;
     private String startDate,endDate;
     private DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     private long startMilliTime,endMilliTime;
+    private RelativeLayout addSubPlanLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,20 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
 
         getDate();
         initDataFromDB();
+        /**
+         * 分解任务
+         */
+        initSubPlan();
+    }
+
+    private void initSubPlan() {
+        addSubPlanLayout = (RelativeLayout)findViewById(R.id.subplan_add);
+        addSubPlanLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toast("Just wait!");
+            }
+        });
     }
 
     private void initDataFromDB() {
@@ -130,6 +147,8 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
          */
         completeBtn = (FloatingActionButton)findViewById(R.id.plan_complete);
         deleteBtn  = (FloatingActionButton)findViewById(R.id.plan_delete);
+        //breakdownBtn = (FloatingActionButton)findViewById(R.id.plan_breakdown);
+        //breakdownBtn.setOnClickListener(this);
         completeBtn.setOnClickListener(this);
         deleteBtn.setOnClickListener(this);
     }
@@ -139,16 +158,21 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
         day = calendar.get(Calendar.DAY_OF_MONTH);
         month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        min = calendar.get(Calendar.MINUTE);
 
         startDT = new DateTime().withDate(year,month+1,day).withTimeAtStartOfDay();
-        startDate = year + "/"+(month+1)+"/"+day;
+        startDate = year + "/"+(month+1)+"/"+day+" "+hour+":"+min;
         try{
-            startMilliTime = formater.parse(startDate).getTime();
-        }catch (ParseException e){
 
+            startMilliTime = formater.parse(startDate).getTime();
+            Log.e("startMilliTime",startMilliTime+"<>"+startDate);
+        }catch (ParseException e){
+            Log.e("startMilliTime-Exp",e.getMessage()+"");
         }
 
-        projectStartTime.setText(startDT.toString(DateTimeFormat.forPattern("yyyy/MM/dd HH:mm")));
+        //projectStartTime.setText(startDT.toString(DateTimeFormat.forPattern("yyyy/MM/dd HH:mm")));
+        projectStartTime.setText(formater.format(calendar.getTime()));
 
         //默认任务周期3天
         calendar.add(Calendar.DAY_OF_MONTH,3);
@@ -157,13 +181,15 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
         year = calendar.get(Calendar.YEAR);
 
         endDT = new DateTime().withDate(year,month+1,day).withTimeAtStartOfDay();
-        endDate = year + "/"+(month+1)+"/"+day;
+        endDate = year + "/"+(month+1)+"/"+day+" "+hour+":"+min;;
         try{
             endMilliTime = formater.parse(endDate).getTime();
+            Log.e("endMilliTime",endMilliTime+"");
         }catch (ParseException e){
-
+            Log.e("ParseException",e.getMessage());
         }
-        projectEndTime.setText(endDT.toString(DateTimeFormat.forPattern("yyyy/MM/dd HH:mm")));
+        //projectEndTime.setText(endDT.toString(DateTimeFormat.forPattern("yyyy/MM/dd HH:mm")));
+        projectEndTime.setText(formater.format(calendar.getTime()));
     }
 
     private void setBar() {
@@ -172,7 +198,7 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("第1个计划");
-           // actionBar.setSubtitle("新建计划");
+            // actionBar.setSubtitle("新建计划");
         }
     }
 
@@ -272,7 +298,7 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
                             }
                         },hour,min,true).show();
                         //startDT = new DateTime().withDate(year,monthOfYear+1,dayOfMonth).withTimeAtStartOfDay();
-                       // projectStartTime.setText(startDT.toString(DateTimeFormat.forPattern("yyyy/MM/dd")));
+                        // projectStartTime.setText(startDT.toString(DateTimeFormat.forPattern("yyyy/MM/dd")));
                     }
                 },year,month,day).show();
 
@@ -282,12 +308,12 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         endDate = year + "/"+(monthOfYear+1)+"/"+dayOfMonth;
-                       try{
-                           projectEndTime.setText(formater.format(formater.parse(endDate)));
-                           endMilliTime = formater.parse(endDate).getTime();
-                       }catch (ParseException e){
+                        try{
+                            projectEndTime.setText(formater.format(formater.parse(endDate)));
+                            endMilliTime = formater.parse(endDate).getTime();
+                        }catch (ParseException e){
 
-                       }
+                        }
 
                         new TimePickerDialog(NewPlanActivity.this, new TimePickerDialog.OnTimeSetListener(){
                             @Override

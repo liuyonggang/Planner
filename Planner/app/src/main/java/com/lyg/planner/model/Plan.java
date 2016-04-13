@@ -45,7 +45,7 @@ public class Plan extends BaseModel{
     public boolean validate(){
         if (name.length() > 21){return false;}
         if (goal.length() > 80){return false;}
-        if (memo.length() > 150){return false;}
+       // if (memo.length() > 150){return false;}
 
         if (startDate < 0){return false;}
         if (endDate < 0){return  false;}

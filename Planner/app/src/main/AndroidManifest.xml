@@ -30,6 +30,8 @@
 
         <activity android:name=".Activity.PlanDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activity.SubPlanActivity"
+            android:label="@string/plan_breakdown" />
     </application>
 
 </manifest>
