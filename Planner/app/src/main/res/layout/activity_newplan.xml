@@ -4,8 +4,8 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:paddingTop="@dimen/fab_margin"
     android:paddingBottom="@dimen/fab_margin"
-    android:paddingLeft="@dimen/twelve_margin"
-    android:paddingRight="@dimen/twelve_margin"
+    android:paddingLeft="@dimen/size_8dp"
+    android:paddingRight="@dimen/size_8dp"
     android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -27,6 +27,8 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             card_view:cardCornerRadius="4dp">
             <LinearLayout
                 android:orientation="vertical"
@@ -64,6 +66,8 @@
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_height="wrap_content"
             android:background="@drawable/ripple_bg"
             android:layout_marginTop="12dp"
@@ -103,6 +107,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/ripple_bg"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="12dp"
             card_view:cardCornerRadius="4dp">
             <LinearLayout
@@ -190,6 +196,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ripple_bg"
             android:visibility="gone"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="12dp"
             card_view:cardCornerRadius="4dp">
             <LinearLayout
@@ -270,6 +278,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ripple_bg"
             android:visibility="gone"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_marginTop="12dp"
             card_view:cardCornerRadius="4dp">
             <LinearLayout
@@ -307,8 +317,14 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ripple_bg"
             android:layout_marginTop="12dp"
+            android:clickable="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:id="@+id/subplan_add"
+            android:stateListAnimator="@anim/list_item_z"
+            android:foreground="?android:attr/selectableItemBackground"
             card_view:cardCornerRadius="4dp">
             <LinearLayout
                 android:orientation="vertical"
@@ -317,23 +333,50 @@
                 android:layout_margin="@dimen/size_16dp">
                 <!--标题-->
                 <RelativeLayout
-                    android:id="@+id/subplan_add"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/plan_breakdown_des"/>
                     <ImageView
+                        android:id="@+id/ic_breakdown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_add_circle_24dp"
+                        android:src="@drawable/ic_dns_24dp"
+                        android:layout_marginRight="@dimen/size_8dp"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/ic_breakdown"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/size_16sp"
+                            android:text="@string/plan_breakdown"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/size_12sp"
+                            android:hint="@string/plan_breakdown_des"/>
+                    </LinearLayout>
+
+                   <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_24dp"
+                        android:layout_centerVertical="true"
                         android:layout_alignParentRight="true" />
                 </RelativeLayout>
-
             </LinearLayout>
         </android.support.v7.widget.CardView>
+
+
+
         <!--底部操作按钮-->
         <RelativeLayout
             android:layout_width="match_parent"

@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.lyg.planner.Activity.SubPlanActivity;
+import com.lyg.planner.adapter.SubPlanAdapter;
 import com.lyg.planner.dao.PlanDao;
 import com.lyg.planner.model.Plan;
 import com.lyg.planner.util.DatabaseHelper;
@@ -63,7 +67,9 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
     private String startDate,endDate;
     private DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     private long startMilliTime,endMilliTime;
-    private RelativeLayout addSubPlanLayout;
+
+    private CardView addSubPlanLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,21 +87,17 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
 
         getDate();
         initDataFromDB();
-        /**
-         * 分解任务
-         */
-        initSubPlan();
-    }
 
-    private void initSubPlan() {
-        addSubPlanLayout = (RelativeLayout)findViewById(R.id.subplan_add);
+        addSubPlanLayout = (CardView)findViewById(R.id.subplan_add);
         addSubPlanLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toast("Just wait!");
+                forward(SubPlanActivity.class);
             }
         });
     }
+
+
 
     private void initDataFromDB() {
         plan = (Plan)getIntent().getSerializableExtra("plan");
@@ -150,6 +152,7 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
         //breakdownBtn = (FloatingActionButton)findViewById(R.id.plan_breakdown);
         //breakdownBtn.setOnClickListener(this);
         completeBtn.setOnClickListener(this);
+        //deleteBtn
         deleteBtn.setOnClickListener(this);
     }
 
