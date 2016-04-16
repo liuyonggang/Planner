@@ -23,7 +23,7 @@
 
     <!-- SplashActivity theme -->
     <style name="SplashTheme" parent="@android:style/Theme.Holo">
-        <item name="android:windowBackground">@drawable/img_splash</item>
+        <item name="android:windowBackground">@drawable/img_hello</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>

@@ -45,7 +45,7 @@ public class SubPlanAdapter extends Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         SubPlanHolder subPlanHolder = (SubPlanHolder)holder;
-        subPlanHolder.subPlanNo.setText((position+1)+"");
+        subPlanHolder.subPlanNo.setText(position+1+"");
     }
 
     @Override

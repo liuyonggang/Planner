@@ -100,7 +100,7 @@ public class PlanDetailActivity extends BaseActivity {
         });
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout)findViewById(R.id.plan_detail_collapsing_toolbar);
-        collapsingToolbar.setTitle("计划详情计划详情计划详情计划详情");
+        collapsingToolbar.setTitle("计划详情");
 
     }
 /*    @Override
