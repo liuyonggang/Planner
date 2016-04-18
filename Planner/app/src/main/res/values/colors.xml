@@ -19,6 +19,7 @@
     <color name="colorPrimary">#37474f</color>
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent2">#03a9f4</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000</color>
@@ -45,4 +46,6 @@
     <color name="purple">#7c57e4</color>
     <!--天蓝色-->
     <color name="blue_sky">#00bcd4</color>
+
+
 </resources>

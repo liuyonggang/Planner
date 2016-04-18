@@ -21,7 +21,8 @@
     <string name="plan_breakdown_des">目标更短,行动更快!</string>
     <string name="plan_date_range">时间(3天)</string>
     <string name="plan_status_priority">状态&amp;标签</string>
-
+    <string name="plan_weight">任务百分比</string>
+    <string name="subplan_add">增加子计划</string>
 
     <string name="plan_memo"> 备注</string>
     <string name="new_plan_tip1">第一纵队</string>
@@ -49,6 +50,7 @@
     </string-array>
 
     <string name="plan_progress_display">&#160;&#160;&#160;&#160;&#160;&#160;计划进度&#160;&#160;</string>
+    <string name="plan_progress_display1">计划进度&#160;&#160;</string>
     <!--图标字体-->
     <string name="project_progress_iconfont">&#xe6e7;</string>
     <string name="date_arrow_iconfont">&#xe6db;</string>

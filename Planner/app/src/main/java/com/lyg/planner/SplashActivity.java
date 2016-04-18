@@ -33,7 +33,7 @@ public class SplashActivity extends Activity {
 
         titmeTip = (TextView)findViewById(R.id.splash_time_tip);
 
-        splashTimer = new SplashTimer(5000,1000);
+        splashTimer = new SplashTimer(3000,1000);
         splashTimer.start();
 
     }

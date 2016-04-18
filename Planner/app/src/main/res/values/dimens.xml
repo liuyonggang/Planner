@@ -18,6 +18,7 @@
     <dimen name="size_22dp">22dp</dimen>
     <dimen name="size_24dp">24dp</dimen>
     <dimen name="size_24sp">24sp</dimen>
+    <dimen name="size_32dp">32dp</dimen>
     <dimen name="size_200dp">200dp</dimen>
     <dimen name="size_160dp">160dp</dimen>
     <!-- font size -->

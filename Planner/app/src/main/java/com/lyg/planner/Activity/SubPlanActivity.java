@@ -1,5 +1,6 @@
 package com.lyg.planner.Activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -70,10 +72,10 @@ public class SubPlanActivity extends BaseActivity{
 
 
         final PopupWindow popupWindow = new PopupWindow(contentView,
-                LinearLayout.LayoutParams.MATCH_PARENT, 500, true);
-
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setTouchable(true);
-
+        popupWindow.setInputMethodMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        popupWindow.setAnimationStyle(R.style.windowAnim);
         popupWindow.setTouchInterceptor(new View.OnTouchListener() {
 
             @Override

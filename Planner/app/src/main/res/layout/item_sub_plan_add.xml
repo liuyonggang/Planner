@@ -39,7 +39,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
+            <TextView
                 android:id="@+id/subplan_percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/subplan_percent"
                 android:orientation="vertical">
-                <EditText
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/size_8dp"
