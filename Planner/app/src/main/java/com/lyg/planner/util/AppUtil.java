@@ -19,4 +19,8 @@ public class AppUtil {
         }
         return milliDtate;
     }
+
+    public static boolean isEntityString(String s) {
+        return s == null || s.equals("null") || s.equals("") || s.trim().length() <= 0 ? false : true;
+    }
 }

@@ -16,11 +16,13 @@ import com.lyg.planner.NewPlanActivity;
 import com.lyg.planner.R;
 import com.lyg.planner.dao.PlanDao;
 import com.lyg.planner.model.Plan;
+import com.lyg.planner.model.SubPlan;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,10 +31,11 @@ import java.util.List;
 public class SubPlanAdapter extends Adapter{
 
     Context mContext;
-    public SubPlanAdapter(Context context){
+    ArrayList<SubPlan> subPlans;
+    public SubPlanAdapter(Context context, ArrayList<SubPlan> subPlans){
         super(context);
         this.mContext = context;
-
+        this.subPlans = subPlans;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,20 +47,32 @@ public class SubPlanAdapter extends Adapter{
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        SubPlan subPlan = subPlans.get(position);
         SubPlanHolder subPlanHolder = (SubPlanHolder)holder;
         subPlanHolder.subPlanNo.setText(position+1+"");
+        subPlanHolder.subPlanContent.setText(subPlan.getContent());
+        subPlanHolder.subPlanWeight.setText(subPlan.getProgress()+"");
     }
 
     @Override
     public int getItemCount() {
-        return 4;
+        return subPlans.size();
     }
 
     class SubPlanHolder extends RecyclerView.ViewHolder {
-        TextView subPlanNo;
+        TextView subPlanNo,subPlanContent,subPlanStartDate,subPlanEndDate,subPlanArrowIc,subPlanWeight;
         public SubPlanHolder(View itemView) {
             super(itemView);
             subPlanNo = (TextView)itemView.findViewById(R.id.sub_plan_No);
+            subPlanContent = (TextView)itemView.findViewById(R.id.subplan_title);
+            subPlanStartDate = (TextView)itemView.findViewById(R.id.subproject_startdate);
+            subPlanStartDate.setTypeface(xiyuanFont);
+            subPlanEndDate = (TextView)itemView.findViewById(R.id.subproject_enddate);
+            subPlanEndDate.setTypeface(xiyuanFont);
+            subPlanArrowIc = (TextView)itemView.findViewById(R.id.subproject_arrowdate_icon);
+            subPlanArrowIc.setTypeface(iconFont);
+            subPlanWeight = (TextView)itemView.findViewById(R.id.subplan_percent);
+            subPlanWeight.setTypeface(xiyuanFont);
         }
     }
 }
