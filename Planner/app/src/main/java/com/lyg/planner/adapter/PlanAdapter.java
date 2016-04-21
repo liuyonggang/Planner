@@ -118,6 +118,7 @@ public class PlanAdapter extends Adapter{
             projectViewHolder.planProgress.setText(plan.getProgress() + "%");
             projectViewHolder.planProgressBar.setProgress(plan.getProgress());
             Log.e("Milli-Time",getMilliCurrentDate()+"<>"+plan.getEndDate());
+
             //时间进度
             if (getMilliCurrentDate() <= plan.getEndDate()){
                 long totalDate = plan.getEndDate() - plan.getStartDate();

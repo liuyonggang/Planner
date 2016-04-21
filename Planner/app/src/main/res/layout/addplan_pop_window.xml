@@ -24,7 +24,7 @@
             android:id="@+id/add_sub_plan_done"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         <ImageView
@@ -39,7 +39,7 @@
             android:id="@+id/delete_sub_plan"
             android:layout_toLeftOf="@id/add_sub_plan_done"
             android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
