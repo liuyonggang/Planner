@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,26 +33,30 @@ public class SubPlanAdapter extends Adapter{
 
     Context mContext;
     ArrayList<SubPlan> subPlans;
+
     public SubPlanAdapter(Context context, ArrayList<SubPlan> subPlans){
         super(context);
         this.mContext = context;
         this.subPlans = subPlans;
+
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sub_plan_add,parent,false);
-        RecyclerView.ViewHolder  holder = new SubPlanHolder(v);
+        RecyclerView.ViewHolder holder = new SubPlanHolder(v);
+
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
         SubPlan subPlan = subPlans.get(position);
         SubPlanHolder subPlanHolder = (SubPlanHolder)holder;
-        subPlanHolder.subPlanNo.setText(position+1+"");
+        subPlanHolder.subPlanNo.setText(position + 1 + "");
         subPlanHolder.subPlanContent.setText(subPlan.getContent());
         subPlanHolder.subPlanWeight.setText(subPlan.getProgress()+"");
+
     }
 
     @Override
@@ -75,4 +80,5 @@ public class SubPlanAdapter extends Adapter{
             subPlanWeight.setTypeface(xiyuanFont);
         }
     }
+
 }

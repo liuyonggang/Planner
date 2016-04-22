@@ -23,7 +23,7 @@
     <string name="plan_date_range">时间(3天)</string>
     <string name="plan_status_priority">状态&amp;标签</string>
     <string name="plan_weight">任务百分比</string>
-    <string name="subplan_add">增加子计划</string>
+    <string name="subplan_add">添加加子计划</string>
 
 
     <string name="plan_memo"> 备注</string>

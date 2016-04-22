@@ -130,7 +130,8 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
             parentPlanStartTime.setText(formater.format(parentStartMilliDate));
             parentPlanEndTime.setText(formater.format(parentEndMilliDate));
 
-            parentPlanTotalTime.setText("总计:"+getTotalDays());
+            parentPlanTotalTime.setText("总计:" + getTotalDays(parentStartMilliDate,parentEndMilliDate) +
+                    "  进度:" + (100-planProgressTotal)+"%");
         }catch (Exception e){
             toast("数据为空");
         }
@@ -138,7 +139,7 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "总计:" + getTotalDays(), Snackbar.LENGTH_LONG).show();
+                showPop();
             }
         });
 
@@ -148,20 +149,9 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
     private void initSubPlan() {
         subPlanList = (RecyclerView)findViewById(R.id.sub_plan_list);
         subPlanList.setLayoutManager(new LinearLayoutManager(this));
-        subPlanAdapter = new SubPlanAdapter(this,subPlans);
+        subPlanAdapter = new SubPlanAdapter(this, subPlans);
         subPlanList.setAdapter(subPlanAdapter);
 
-        addPlanFB = (FloatingActionButton)findViewById(R.id.subplan_add_fb);
-        addPlanFB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPopupShown) {
-                    hidePop();
-                } else {
-                    showPop();
-                }
-            }
-        });
         //仿PopupWindow
         bottomIn = AnimationUtils.loadAnimation(this,R.anim.popup_bottom_in);
         bottomOut = AnimationUtils.loadAnimation(this,R.anim.popup_bottom_out);
@@ -340,18 +330,34 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
 
                 if (!AppUtil.isEntityString(subPlanEdit.getText().toString())){
                     editInputLayout.setError("请输入计划");
+                    Snackbar.make(v, "请输入计划", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (planProgress == 0){
-                    toast("请设置进度");
+                    //toast("请设置进度");
+                    Snackbar.make(v, "请设置进度", Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 if (endMilliTime == parentEndMilliDate){
-                    if (planProgressTotal != 100){
+                    if (planProgressTotal < 100){
                         //toast("时间已分配完,但所占总进度不到100");
-                        Snackbar.make(v, "时间已分配完,但总进度不到100%", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(v, "时间已分配完,但总进度不到100%", Snackbar.LENGTH_LONG).show();
+                        return;
                     }
                 }
+                if (planProgressTotal > 100){
+                    Snackbar.make(v, "总进度已分配完!", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                if (startMilliTime == endMilliTime){
+                    Snackbar.make(v, "起始时间和结束时间相等,毫无意义!", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                if(planProgress > 100-planProgressTotal){
+                    Snackbar.make(v, "当前进度大于剩余总进度!", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
                 planProgressTotal += planProgress;
 
                 SubPlan subPlan = new SubPlan();
@@ -363,6 +369,7 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
                 subPlans.add(subPlan);
                 subPlanAdapter.notifyDataSetChanged();
 
+                parentPlanTotalTime.setText("总计:" + getTotalDays(parentStartMilliDate,parentEndMilliDate) + "  进度:" + (100-planProgressTotal)+"%");
                 hidePop();
                 break;
             case R.id.delete_sub_plan:
@@ -370,18 +377,13 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
         }
     }
     private void showPop(){
-        addPlanFB.setVisibility(View.GONE);
         isPopupShown = true;
         popManagerLayout.startAnimation(bottomIn);
         popManagerLayout.setVisibility(View.VISIBLE);
         transView.setVisibility(View.VISIBLE);
 
-       /* if (startMilliTime == parentEndMilliDate){
-            toast();
-        }*/
     }
     private void hidePop(){
-        addPlanFB.setVisibility(View.VISIBLE);
         isPopupShown = false;
         popManagerLayout.startAnimation(bottomOut);
         popManagerLayout.setVisibility(View.GONE);
@@ -391,12 +393,15 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void popClear() {
-        subPlanEdit.clearComposingText();
-
+        subPlanEdit.setText("");
+         /*if (endMilliTime> parentStartMilliDate && endMilliTime < parentEndMilliDate){
+             startMilliTime = endMilliTime;
+             parentPlanStartTime.setText(formater.format(startMilliTime));
+         }*/
     }
 
-    private String getTotalDays(){
-        long totalTime = parentEndMilliDate - parentStartMilliDate;
+    private String getTotalDays(long startMillis,long endMillis){
+        long totalTime = endMillis - startMillis;
         try{
             Log.e("SubPlan-DATA",totalTime+"<>");
             int day = (int)Math.floor(totalTime/(24*60*60*1000));
