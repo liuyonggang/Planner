@@ -61,12 +61,13 @@ public class MainActivity extends BaseActivity
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                forward(NewPlanActivity.class);
+                //forward(NewPlanActivity.class);
             }
         });
 

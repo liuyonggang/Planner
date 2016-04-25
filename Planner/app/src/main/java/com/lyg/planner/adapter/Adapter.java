@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 
 import com.lyg.planner.dao.BaseDao;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,7 @@ public class Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public LayoutInflater inflater = null;
     Context context;
     ArrayList<HashMap<String, String>> data;
+    public DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
     public Adapter(Context context){
         this.context = context;

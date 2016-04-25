@@ -6,13 +6,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by Administrator on 2016/3/3.
  */
 public class BaseActivity extends AppCompatActivity{
 
     public Typeface iconFont,xiyuanFont;
-
+    public DateFormat formater = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

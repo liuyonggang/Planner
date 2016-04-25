@@ -11,8 +11,8 @@
     <string name="goal">目标</string>
     <string name="new_plan">新建计划</string>
     <string name="plan_detail">计划详情</string>
-    <string name="plan_progress">计划</string>
-    <string name="plan_time_progress">时间</string>
+    <string name="plan_progress">计划(P)</string>
+    <string name="plan_time_progress">时间(T)</string>
     <string name="plan_breakdown">分解计划</string>
     <string name="plan_breakdown_over">完成分解</string>
 

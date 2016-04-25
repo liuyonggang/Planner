@@ -18,6 +18,7 @@ import com.lyg.planner.R;
 import com.lyg.planner.dao.PlanDao;
 import com.lyg.planner.model.Plan;
 import com.lyg.planner.model.SubPlan;
+import com.lyg.planner.util.AppUtil;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -33,12 +34,12 @@ public class SubPlanAdapter extends Adapter{
 
     Context mContext;
     ArrayList<SubPlan> subPlans;
-
-    public SubPlanAdapter(Context context, ArrayList<SubPlan> subPlans){
+    View.OnClickListener listener;
+    public SubPlanAdapter(Context context, ArrayList<SubPlan> subPlans,View.OnClickListener listener){
         super(context);
         this.mContext = context;
         this.subPlans = subPlans;
-
+        this.listener = listener;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -56,7 +57,10 @@ public class SubPlanAdapter extends Adapter{
         subPlanHolder.subPlanNo.setText(position + 1 + "");
         subPlanHolder.subPlanContent.setText(subPlan.getContent());
         subPlanHolder.subPlanWeight.setText(subPlan.getProgress()+"");
-
+        subPlanHolder.subPlanStartDate.setText(formater.format(subPlan.getStartDateMilli()));
+        subPlanHolder.subPlanEndDate.setText(formater.format(subPlan.getEndDateMilli()));
+        subPlanHolder.subPlanTotalTime.setText("总计:"+ AppUtil.getTotalDays(subPlan.getStartDateMilli(),subPlan.getEndDateMilli()));
+        subPlanHolder.subPlanCardView.setOnClickListener(listener);
     }
 
     @Override
@@ -65,7 +69,8 @@ public class SubPlanAdapter extends Adapter{
     }
 
     class SubPlanHolder extends RecyclerView.ViewHolder {
-        TextView subPlanNo,subPlanContent,subPlanStartDate,subPlanEndDate,subPlanArrowIc,subPlanWeight;
+        TextView subPlanNo,subPlanContent,subPlanStartDate,subPlanEndDate,subPlanArrowIc,subPlanWeight,subPlanTotalTime;
+        CardView subPlanCardView;
         public SubPlanHolder(View itemView) {
             super(itemView);
             subPlanNo = (TextView)itemView.findViewById(R.id.sub_plan_No);
@@ -78,6 +83,10 @@ public class SubPlanAdapter extends Adapter{
             subPlanArrowIc.setTypeface(iconFont);
             subPlanWeight = (TextView)itemView.findViewById(R.id.subplan_percent);
             subPlanWeight.setTypeface(xiyuanFont);
+            subPlanTotalTime = (TextView)itemView.findViewById(R.id.sub_plan_totaltime);
+            subPlanCardView = (CardView)itemView.findViewById(R.id.sub_plan_edit_cardview);
+
+
         }
     }
 

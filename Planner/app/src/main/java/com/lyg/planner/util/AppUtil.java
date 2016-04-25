@@ -1,5 +1,7 @@
 package com.lyg.planner.util;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -22,5 +24,25 @@ public class AppUtil {
 
     public static boolean isEntityString(String s) {
         return s == null || s.equals("null") || s.equals("") || s.trim().length() <= 0 ? false : true;
+    }
+
+    public static String getTotalDays(long startMillis,long endMillis){
+        long totalTime = endMillis - startMillis;
+        try{
+            int day = (int)Math.floor(totalTime/(24*60*60*1000));
+            if (totalTime%(24*60*60*1000) == 0){
+                return day+"天";
+            }
+            int hour = (int)Math.floor(totalTime/(60*60*1000)%24);
+            if (totalTime%(60*60*1000) == 0){
+                return day+"天"+hour+"时";
+            }
+            int minite = (int)Math.floor((totalTime/(60*1000))%60);
+            return day+"天"+hour+"时"+minite+"分";
+        }catch (Exception e){
+            Log.e("SubPlan-EXP",e.getMessage());
+        }
+
+        return null;
     }
 }

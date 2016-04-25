@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -206,7 +207,7 @@ public class PlanAdapter extends Adapter{
         }
     }
     class AddProjectHolder extends RecyclerView.ViewHolder{
-        LinearLayout addLayout;
+        CardView addLayout;
         TextView addIc;
 
         public AddProjectHolder(View view){
@@ -214,7 +215,7 @@ public class PlanAdapter extends Adapter{
             addIc = (TextView)view.findViewById(R.id.project_add_icon);
             addIc.setTypeface(iconFont);
 
-            addLayout = (LinearLayout)view.findViewById(R.id.project_item_add_layout);
+            addLayout = (CardView)view.findViewById(R.id.project_item_add_layout);
         }
     }
 

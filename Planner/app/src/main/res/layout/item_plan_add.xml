@@ -1,82 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@drawable/ripple_bg" android:id="@+id/project_item_add_layout"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    card_view:cardCornerRadius="4dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="@color/white" android:id="@+id/project_item_add_layout"
     android:layout_height="wrap_content" android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp" android:layout_marginTop="8dp"
     android:layout_marginBottom="40dp">
-
-    <RelativeLayout
-        android:id="@+id/project_title_layout"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!--项目正文-->
-        <TextView
-            android:id="@+id/project_content_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="人生规划师"
-            android:textColor="@color/gray"
-            android:textSize="17sp"
-            android:layout_centerVertical="true" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/project_oath_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="成功来源于对时间的精确规划和彻底执行！"
-        android:textColor="@color/gray_font"
-        android:textSize="16sp"
-        android:gravity="center_vertical|left"
-        android:layout_gravity="center_vertical|left"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginTop="@dimen/twelve_margin"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:background="@color/def_white"/>
-
-    <!--add-->
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="1.5dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_centerVertical="true">
+        android:orientation="vertical">
+        <RelativeLayout
+            android:id="@+id/project_title_layout"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--项目正文-->
+            <TextView
+                android:id="@+id/project_content_main"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="人生规划师"
+                android:textColor="@color/gray"
+                android:textSize="17sp"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/project_add_icon"
+            android:id="@+id/project_oath_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/add_icon"
-            android:textSize="14sp"
-            android:textColor="@color/blue_green"/>
+            android:text="成功来源于对时间的精确规划和彻底执行！"
+            android:textColor="@color/gray_font"
+            android:textSize="16sp"
+            android:gravity="center_vertical|left"
+            android:layout_gravity="center_vertical|left"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_marginTop="@dimen/twelve_margin"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/def_white"/>
 
-        <TextView
-            android:id="@+id/project_startdate"
-            android:layout_width="wrap_content"
+        <!--add-->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/project_add_icon"
-            android:text="@string/new_plan"
-            android:layout_marginLeft="2dp"
-            android:textColor="@color/blue_green"
-            android:textSize="14sp"/>
+            android:paddingTop="1.5dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerVertical="true">
 
+            <TextView
+                android:id="@+id/project_add_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/add_icon"
+                android:textSize="14sp"
+                android:textColor="@color/blue_green"/>
 
-    </RelativeLayout>
-</LinearLayout>
+            <TextView
+                android:id="@+id/project_startdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/project_add_icon"
+                android:text="@string/new_plan"
+                android:layout_marginLeft="2dp"
+                android:textColor="@color/blue_green"
+                android:textSize="14sp"/>
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
