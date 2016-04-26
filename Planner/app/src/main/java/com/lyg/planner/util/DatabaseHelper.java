@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.lyg.planner.dao.PlanDao;
+import com.lyg.planner.dao.SubPlanDao;
 import com.lyg.planner.model.Plan;
 
 /**
@@ -21,6 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(PlanDao.CREATE_SQL);
+        db.execSQL(SubPlanDao.CREATE_SQL);
     }
 
     @Override

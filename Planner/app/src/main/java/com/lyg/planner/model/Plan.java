@@ -13,6 +13,17 @@ public class Plan extends BaseModel{
     private long startDate = -1;
     private long endDate = -1;
     private String memo;
+    private int subPlans = 0;
+
+    public int getSubPlans() {
+        return subPlans;
+    }
+
+    public void setSubPlans(int subPlans) {
+        this.subPlans = subPlans;
+    }
+
+
 
     public void setProjectID(int projectID) { this.projectID = projectID; }
     public int getProjectID() { return projectID; }

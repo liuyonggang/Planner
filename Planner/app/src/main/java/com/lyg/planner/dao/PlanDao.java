@@ -24,10 +24,11 @@ public class PlanDao extends BaseDao{
     public static final String COLUMN_PlanStatus= "planStatus";
     public static final String COLUMN_PlanProgress= "planProgress";
     public static final String COLUMN_PlanMemo= "planMemo";
+    public static final String COLUMN_SubPlans= "subPlans";//子计划个数
 
     static final String[] COLUMNS = {
        COLUMN_PlanID,COLUMN_PlanName,COLUMN_PlanGoal,COLUMN_PlanStartDate, COLUMN_PlanEndDate,COLUMN_PlanStatus,COLUMN_PlanProgress,COLUMN_PlanMemo
-    };
+    ,COLUMN_SubPlans};
 
     public static final String CREATE_SQL = "CREATE TABLE " + TABLE_NAME + " ("
             + COLUMN_PlanID + " INTEGER PRIMARY KEY,"
@@ -37,12 +38,14 @@ public class PlanDao extends BaseDao{
             + COLUMN_PlanEndDate + " INTEGER,"
             + COLUMN_PlanStatus + " INTEGER,"
             + COLUMN_PlanProgress + " INTEGER,"
-            + COLUMN_PlanMemo + " TEXT)";
+            + COLUMN_PlanMemo + " TEXT,"
+            + COLUMN_SubPlans + " INTEGER)";
 
     SQLiteDatabase db;
 
     public PlanDao(SQLiteDatabase db){
         this.db = db;
+        //db.execSQL(CREATE_SQL);
     }
 
     public List<Plan> findAll(){
@@ -59,12 +62,22 @@ public class PlanDao extends BaseDao{
             pj.setMemo(c.getString(c.getColumnIndex(COLUMN_PlanMemo)));
             pj.setStatus(c.getInt(c.getColumnIndex(COLUMN_PlanStatus)));
             pj.setProgress(c.getInt(c.getColumnIndex(COLUMN_PlanProgress)));
+            pj.setSubPlans(c.getInt(c.getColumnIndex(COLUMN_SubPlans)));
             list.add(pj);
         }
         c.close();
         return list;
     }
-
+/*    public int getSubPlansSize(int planID){
+        Cursor c = db.query(TABLE_NAME,COLUMNS,COLUMN_PlanID + " = ?",
+                new String[]{String.valueOf(planID)},null,null,COLUMN_PlanID);
+        Plan pj = null;
+        while (c.moveToNext()){
+            pj = new Plan();
+            return pj.getSubPlans();
+        }
+        return 0;
+    }*/
     public Plan findByProjectID(int projectID){
         Cursor c = db.query(TABLE_NAME,COLUMNS,COLUMN_PlanID + " = ?",
                 new String[]{String.valueOf(projectID)},null,null,COLUMN_PlanID);
@@ -80,6 +93,7 @@ public class PlanDao extends BaseDao{
             pj.setMemo(c.getString(c.getColumnIndex(COLUMN_PlanMemo)));
             pj.setStatus(c.getInt(c.getColumnIndex(COLUMN_PlanStatus)));
             pj.setProgress(c.getInt(c.getColumnIndex(COLUMN_PlanProgress)));
+            pj.setSubPlans(c.getInt(c.getColumnIndex(COLUMN_SubPlans)));
         }
         c.close();
         return pj;
@@ -97,6 +111,7 @@ public class PlanDao extends BaseDao{
         values.put(COLUMN_PlanMemo,pj.getMemo());
         values.put(COLUMN_PlanStatus, pj.getStatus());
         values.put(COLUMN_PlanProgress,pj.getProgress());
+        values.put(COLUMN_SubPlans,pj.getSubPlans());
 
         if (exists(pj.getProjectID())){
             String where = COLUMN_PlanID + " = ?";

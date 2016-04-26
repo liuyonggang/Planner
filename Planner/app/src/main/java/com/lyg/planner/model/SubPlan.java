@@ -4,20 +4,29 @@ package com.lyg.planner.model;
  * Created by Administrator on 2016/4/19.
  */
 public class SubPlan extends BaseModel{
+
+    int id;
+    int parentId;
     String content;//计划内容
     long startDateMilli;//开始时间戳
     long endDateMilli;//结束时间戳
     int progress;//计划进度
 
-    public int getNumber() {
-        return number;
+    public int getId() {
+        return id;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    int number;//计划编号
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
 
     public String getContent() {
         return content;
@@ -51,5 +60,17 @@ public class SubPlan extends BaseModel{
         this.progress = progress;
     }
 
+    //validation验证
+    public boolean validate(){
+       // if (name.length() > 21){return false;}
+       // if (goal.length() > 80){return false;}
+        // if (memo.length() > 150){return false;}
 
+        if (startDateMilli <= 0){return false;}
+        if (endDateMilli <= 0){return  false;}
+
+        if (startDateMilli > endDateMilli){return false;}
+
+        return true;
+    }
 }

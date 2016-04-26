@@ -32,6 +32,7 @@ import android.widget.TimePicker;
 import com.lyg.planner.Activity.SubPlanActivity;
 import com.lyg.planner.adapter.SubPlanAdapter;
 import com.lyg.planner.dao.PlanDao;
+import com.lyg.planner.dao.SubPlanDao;
 import com.lyg.planner.model.Plan;
 import com.lyg.planner.util.AppUtil;
 import com.lyg.planner.util.DatabaseHelper;
@@ -74,6 +75,7 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
     private long startMilliTime,endMilliTime;
 
     private CardView addSubPlanLayout;
+    private TextView breakdownPlanTitle;
     private int planId = 0;
     private SharedPreferences sharedPreferences;
     private final static int NEW_PLAN = 1000;
@@ -81,26 +83,32 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newplan);
+        /**
+         * 初始化
+         */
+        init();
+
+        /**
+         * 获取实时时间
+         */
+        getDate();
+
+        /**
+         * 初始化数据
+         */
+        initDataFromDB();
 
         /**
          * 设置标题栏
          */
         setBar();
 
-        /**
-         * 初始化
-         */
-        init();
 
-        getDate();
-        initDataFromDB();
-
-        addSubPlanLayout = (CardView)findViewById(R.id.subplan_add);
-        addSubPlanLayout.setOnClickListener(this);
     }
 
     private void initDataFromDB() {
-
+        sharedPreferences = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
+        planId = sharedPreferences.getInt("planNo",0)+1;
         plan = (Plan)getIntent().getSerializableExtra("plan");
 
         //db
@@ -109,6 +117,7 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
         planDao = new PlanDao(db);
 
         if (planDao.exists(plan.getProjectID())){
+            planId = plan.getProjectID();
             isEdit = true;
             contentEditView.setText(plan.getName());
             goalEditView.setText(plan.getGoal());
@@ -156,6 +165,11 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
         completeBtn.setOnClickListener(this);
         //deleteBtn
         deleteBtn.setOnClickListener(this);
+
+        //分解计划
+        breakdownPlanTitle = (TextView)findViewById(R.id.breakdown_title);
+        addSubPlanLayout = (CardView)findViewById(R.id.subplan_add);
+        addSubPlanLayout.setOnClickListener(this);
     }
 
     private void setDate() {
@@ -198,8 +212,6 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void setBar() {
-        sharedPreferences = getSharedPreferences("userinfo", Context.MODE_PRIVATE);
-        planId = sharedPreferences.getInt("planNo",0)+1;
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -247,11 +259,12 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
                     if (planDao.save(plan) < 0) {
                         throw new Exception("could not save Task");
                     }
-                    //保存计划编号
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("planNo",planId);
-                    editor.commit();
-
+                    if (!isEdit){
+                        //保存计划编号
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("planNo",planId);
+                        editor.commit();
+                    }
                     toast("保存成功");
                     finish();
                 } catch (Exception e) {
@@ -367,8 +380,8 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
                     toast("请先填写计划");
                     return;
                 }
-
                 Intent intent = new Intent(this,SubPlanActivity.class);
+                intent.putExtra("planId",planId);
                 intent.putExtra("planContent", contentEditView.getText().toString());
                 intent.putExtra("planStartTime", startMilliTime);
                 intent.putExtra("planEndTime", endMilliTime);
@@ -398,6 +411,23 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
         min=c.get(Calendar.MINUTE);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("subPlanSize-1", planId+"<>");
+        try{
+            DatabaseHelper helper = new DatabaseHelper(this);
+            SQLiteDatabase db = helper.getWritableDatabase();
+            SubPlanDao subPlanDao = new SubPlanDao(db);
+            int subPlanSize = subPlanDao.getSubPlanSize(planId);
+            Log.e("subPlanSize",""+subPlanSize);
+            if (subPlanSize > 0){
+                breakdownPlanTitle.setText("分解计划("+subPlanSize+")");
+            }
+        }catch (Exception e){
+
+        }
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

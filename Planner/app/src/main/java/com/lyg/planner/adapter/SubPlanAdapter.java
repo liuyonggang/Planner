@@ -33,13 +33,14 @@ import java.util.List;
 public class SubPlanAdapter extends Adapter{
 
     Context mContext;
-    ArrayList<SubPlan> subPlans;
+    List<SubPlan> subPlans;
     View.OnClickListener listener;
-    public SubPlanAdapter(Context context, ArrayList<SubPlan> subPlans,View.OnClickListener listener){
+    OnItemClickListener onItemClickListener;
+    public SubPlanAdapter(Context context, List<SubPlan> subPlans,OnItemClickListener onItemClickListener){
         super(context);
         this.mContext = context;
         this.subPlans = subPlans;
-        this.listener = listener;
+        this.onItemClickListener = onItemClickListener;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -50,7 +51,7 @@ public class SubPlanAdapter extends Adapter{
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         SubPlan subPlan = subPlans.get(position);
         SubPlanHolder subPlanHolder = (SubPlanHolder)holder;
@@ -59,8 +60,13 @@ public class SubPlanAdapter extends Adapter{
         subPlanHolder.subPlanWeight.setText(subPlan.getProgress()+"");
         subPlanHolder.subPlanStartDate.setText(formater.format(subPlan.getStartDateMilli()));
         subPlanHolder.subPlanEndDate.setText(formater.format(subPlan.getEndDateMilli()));
-        subPlanHolder.subPlanTotalTime.setText("总计:"+ AppUtil.getTotalDays(subPlan.getStartDateMilli(),subPlan.getEndDateMilli()));
-        subPlanHolder.subPlanCardView.setOnClickListener(listener);
+        subPlanHolder.subPlanTotalTime.setText("总计:" + AppUtil.getTotalDays(subPlan.getStartDateMilli(), subPlan.getEndDateMilli()));
+        subPlanHolder.subPlanCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(position);
+            }
+        });
     }
 
     @Override
@@ -71,6 +77,7 @@ public class SubPlanAdapter extends Adapter{
     class SubPlanHolder extends RecyclerView.ViewHolder {
         TextView subPlanNo,subPlanContent,subPlanStartDate,subPlanEndDate,subPlanArrowIc,subPlanWeight,subPlanTotalTime;
         CardView subPlanCardView;
+        OnItemClickListener onItemClickListener;
         public SubPlanHolder(View itemView) {
             super(itemView);
             subPlanNo = (TextView)itemView.findViewById(R.id.sub_plan_No);
@@ -86,8 +93,12 @@ public class SubPlanAdapter extends Adapter{
             subPlanTotalTime = (TextView)itemView.findViewById(R.id.sub_plan_totaltime);
             subPlanCardView = (CardView)itemView.findViewById(R.id.sub_plan_edit_cardview);
 
-
         }
+
+    }
+
+    public interface OnItemClickListener{
+        public void onItemClick(int position);
     }
 
 }

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -34,14 +35,17 @@ import android.widget.TimePicker;
 import com.lyg.planner.BaseActivity;
 import com.lyg.planner.R;
 import com.lyg.planner.adapter.SubPlanAdapter;
+import com.lyg.planner.dao.SubPlanDao;
 import com.lyg.planner.model.SubPlan;
 import com.lyg.planner.util.AppUtil;
+import com.lyg.planner.util.DatabaseHelper;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * 分解计划
@@ -62,16 +66,15 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
     private TextView subStartDate,subEndDate,seekPro;
     private SeekBar subPlanSeekBar;
     private LinearLayout addLayout,deleteLayout;
-    private boolean isPopupShown = false;
     /**
      * 存储数据的变量
      */
     private String startDate,endDate;
     private long startMilliTime,endMilliTime,startMilliTimePick,endMilliTimePick;
-
+    private SQLiteDatabase db;
     private int year,month,day,hour,min;
     private int planProgress = 0;
-    ArrayList<SubPlan> subPlans = new ArrayList<>();
+    List<SubPlan> subPlans = new ArrayList<>();
 
     private CardView cardView;
     private int parentId = 0;
@@ -81,8 +84,14 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
     private String addPlanStartTime;
     //已分配进度总和
     private int planProgressTotal = 0;
-
-    private int delayProgress = 100;
+    private int delayProgress = 100;//剩余进度
+    /**
+     * 数据库
+     */
+    private SubPlanDao subPlanDao;
+    //在整张表里的主键起始位
+    private int subPlanID = 0;
+    private boolean isEdit = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +128,7 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
         //尝试接受信息
         try{
             Intent intent = this.getIntent();
+            parentId = intent.getIntExtra("planId",0);
             parentPlan = intent.getStringExtra("planContent");
             parentStartMilliDate = intent.getLongExtra("planStartTime", 0l);
             parentEndMilliDate = intent.getLongExtra("planEndTime", 0l);
@@ -145,16 +155,28 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
+        //初始化数据库
+        DatabaseHelper helper = new DatabaseHelper(this);
+        db = helper.getWritableDatabase();
+        subPlanDao = new SubPlanDao(db);
+        if (subPlanDao.existParentID(parentId)){
+            subPlans = subPlanDao.findAllByParentID(parentId);
+        }
+        if (subPlans.size() > 0){
+            parentPlanTotalTime.setText("时间:" + AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate) +
+                    "/"+ AppUtil.getTotalDays(endMilliTime, parentEndMilliDate)+"  进度:" +"0%");
+        }
+
     }
 
 
     private void initSubPlan() {
         subPlanList = (RecyclerView)findViewById(R.id.sub_plan_list);
         subPlanList.setLayoutManager(new LinearLayoutManager(this));
-        subPlanAdapter = new SubPlanAdapter(this, subPlans, new View.OnClickListener() {
+        subPlanAdapter = new SubPlanAdapter(this, subPlans, new SubPlanAdapter.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onItemClick(int position) {
+                showPop(subPlans.get(position));
             }
         });
         subPlanList.setAdapter(subPlanAdapter);
@@ -233,19 +255,23 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_dreakdown_plan,menu);
-        return true;
-    }
+    /*  public boolean onCreateOptionsMenu(Menu menu){
+          getMenuInflater().inflate(R.menu.menu_dreakdown_plan,menu);
+          return true;
+      }*/
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if (id == android.R.id.home){
             this.finish();
             return true;
         }
-        if (id == R.id.action_compelete){
-            toast("Compelete!");
-        }
+      /*  if (id == R.id.action_compelete){
+            try{
+
+            }catch (Exception e){
+                toast("保存失败");
+            }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -376,33 +402,52 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
                         return;
                     }
                 }
+                subPlanID = subPlans.size()+1;
                 SubPlan subPlan = new SubPlan();
+                subPlan.setId(subPlanID);
+                subPlan.setParentId(parentId);
                 subPlan.setContent(subPlanEdit.getText().toString());
                 subPlan.setProgress(planProgress);
                 subPlan.setStartDateMilli(startMilliTime);
                 subPlan.setEndDateMilli(endMilliTime);
-                //subPlan.setNumber();
-                subPlans.add(subPlan);
-                subPlanAdapter.notifyDataSetChanged();
+                try{
+                    subPlanDao.save(subPlan);
+                    toast("保存成功");
 
-                delayProgress = 100-planProgressTotal;
-                parentPlanTotalTime.setText("时间:" + AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate)+"/"+
-                        AppUtil.getTotalDays(endMilliTime, parentEndMilliDate)+ "  进度:" + delayProgress + "%");
-                hidePop(true);
+                    subPlans.add(subPlan);
+                    subPlanAdapter.notifyDataSetChanged();
+                    delayProgress = 100-planProgressTotal;
+                    parentPlanTotalTime.setText("时间:" + AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate) + "/" +
+                            AppUtil.getTotalDays(endMilliTime, parentEndMilliDate) + "  进度:" + delayProgress + "%");
+                    hidePop(true);
+                }catch (Exception e){
+                    toast("保存失败");
+                    Log.e("EXP",e.getMessage());
+                }
+
                 break;
             case R.id.delete_sub_plan:
                 break;
         }
     }
     private void showPop(){
-        isPopupShown = true;
         popManagerLayout.startAnimation(bottomIn);
         popManagerLayout.setVisibility(View.VISIBLE);
         transView.setVisibility(View.VISIBLE);
 
     }
+    private void showPop(SubPlan subPlan){
+        isEdit = true;
+        popManagerLayout.startAnimation(bottomIn);
+        popManagerLayout.setVisibility(View.VISIBLE);
+        transView.setVisibility(View.VISIBLE);
+
+        subPlanEdit.setText(subPlan.getContent());
+        subStartDate.setText(formater.format(subPlan.getStartDateMilli()));
+        subEndDate.setText(formater.format(subPlan.getEndDateMilli()));
+        subPlanSeekBar.setProgress(subPlan.getProgress());
+    }
     private void hidePop(boolean isNeededToClear){
-        isPopupShown = false;
         popManagerLayout.startAnimation(bottomOut);
         popManagerLayout.setVisibility(View.GONE);
         transView.setVisibility(View.GONE);
@@ -415,14 +460,18 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
 
     private void popClear() {
         subPlanEdit.setText("");
-         if (endMilliTime> parentStartMilliDate && endMilliTime <= parentEndMilliDate){
-             startMilliTime = endMilliTime;
-             subStartDate.setText(formater.format(endMilliTime));
-             subEndDate.setText(formater.format(parentEndMilliDate));
-             endMilliTime = parentEndMilliDate;
-             planProgress = 100-planProgressTotal;
-             subPlanSeekBar.setProgress(planProgress);
-         }
+        if (endMilliTime> parentStartMilliDate && endMilliTime <= parentEndMilliDate){
+            startMilliTime = endMilliTime;
+            subStartDate.setText(formater.format(endMilliTime));
+            subEndDate.setText(formater.format(parentEndMilliDate));
+            endMilliTime = parentEndMilliDate;
+            planProgress = 100-planProgressTotal;
+            subPlanSeekBar.setProgress(planProgress);
+        }
     }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
+    }
 }
