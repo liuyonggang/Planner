@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,7 +21,10 @@ import com.lyg.planner.NewPlanActivity;
 import com.lyg.planner.R;
 import com.lyg.planner.dao.BaseDao;
 import com.lyg.planner.dao.PlanDao;
+import com.lyg.planner.dao.SubPlanDao;
 import com.lyg.planner.model.Plan;
+import com.lyg.planner.model.SubPlan;
+import com.lyg.planner.util.DatabaseHelper;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -44,12 +48,20 @@ public class PlanAdapter extends Adapter{
     private int year,month,day,hour,min;
     private DateTime currentDT;
 
+    SQLiteDatabase db;
+    SubPlanDao subPlanDao;
+    SubPlan mSubPlan = null;
+
     public PlanAdapter(Context context,List<Plan> projects,PlanDao daoObj){
         super(context,projects,daoObj);
         this.mContext = context;
         this.plans = projects;
         this.planDao = daoObj;
 
+        //初始化数据库
+        DatabaseHelper helper = new DatabaseHelper(context);
+        db = helper.getWritableDatabase();
+        subPlanDao = new SubPlanDao(db);
         /*Calendar calendar = Calendar.getInstance();
         day = calendar.get(Calendar.DAY_OF_MONTH);
         month = calendar.get(Calendar.MONTH);
@@ -97,6 +109,9 @@ public class PlanAdapter extends Adapter{
                 public void onClick(View v) {
                     Intent i = new Intent(context,PlanDetailActivity.class);
                     i.putExtra("plan",plan);
+                    if (mSubPlan != null){
+                        i.putExtra("subplan",mSubPlan);
+                    }
                     v.getContext().startActivity(i);
                 }
             });
@@ -139,7 +154,26 @@ public class PlanAdapter extends Adapter{
                 projectViewHolder.planDtProgress.setText("100%");
                 projectViewHolder.projectBaseLayout.setCardBackgroundColor(mContext.getResources().getColor(R.color.orange_red));
             }
-
+            //子任务
+            try{
+                List<SubPlan> subPlans = subPlanDao.findAllByParentID(plan.getProjectID());
+                if (subPlans.size() > 0){
+                    for (int i = 0;i< subPlans.size();i++){
+                        SubPlan subPlan = subPlans.get(i);
+                        int subPlanPro =  subPlan.getProgress();
+                        if (subPlanPro < 100){
+                            projectViewHolder.subPlanName.setText(subPlan.getId()+"."+subPlan.getContent());
+                            mSubPlan = subPlan;
+                            return;
+                        }
+                    }
+                    //projectViewHolder.subPlanName
+                }else {
+                    projectViewHolder.subPlanLayout.setVisibility(View.GONE);
+                }
+            }catch (Exception e){
+                projectViewHolder.subPlanLayout.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -190,11 +224,10 @@ public class PlanAdapter extends Adapter{
 
             //item背景
             projectBaseLayout = (android.support.v7.widget.CardView)view.findViewById(R.id.project_item_layout);
-           // projectBaseLayout.setCardBackgroundColor(mContext.getResources().getColor(colors[new Random().nextInt(colors.length)]));
+            // projectBaseLayout.setCardBackgroundColor(mContext.getResources().getColor(colors[new Random().nextInt(colors.length)]));
 
             //展示子任务
             subPlanLayout = (RelativeLayout)view.findViewById(R.id.sub_plan_layout);
-            subPlanLayout.setVisibility(View.GONE);
             subPlanIc = (TextView)view.findViewById(R.id.sub_plan_ic);
             subPlanIc.setTypeface(newIcFont);
             subPlanName = (TextView)view.findViewById(R.id.sub_plan_display);

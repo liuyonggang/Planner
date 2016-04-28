@@ -57,7 +57,7 @@ public class SubPlanAdapter extends Adapter{
         SubPlanHolder subPlanHolder = (SubPlanHolder)holder;
         subPlanHolder.subPlanNo.setText(position + 1 + "");
         subPlanHolder.subPlanContent.setText(subPlan.getContent());
-        subPlanHolder.subPlanWeight.setText(subPlan.getProgress()+"");
+        subPlanHolder.subPlanWeight.setText(subPlan.getWeight()+"");
         subPlanHolder.subPlanStartDate.setText(formater.format(subPlan.getStartDateMilli()));
         subPlanHolder.subPlanEndDate.setText(formater.format(subPlan.getEndDateMilli()));
         subPlanHolder.subPlanTotalTime.setText("总计:" + AppUtil.getTotalDays(subPlan.getStartDateMilli(), subPlan.getEndDateMilli()));

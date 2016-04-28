@@ -53,6 +53,7 @@
 
     <string name="plan_progress_display">&#160;&#160;&#160;&#160;&#160;&#160;计划进度&#160;&#160;</string>
     <string name="plan_progress_display1">计划进度&#160;&#160;</string>
+    <string name="plan_total_progress">总进度</string>
     <!--图标字体-->
     <string name="project_progress_iconfont">&#xe6e7;</string>
     <string name="date_arrow_iconfont">&#xe6db;</string>

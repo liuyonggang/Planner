@@ -1,8 +1,10 @@
 package com.lyg.planner.Activity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -91,6 +93,7 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
     private SubPlanDao subPlanDao;
     //在整张表里的主键起始位
     private int subPlanID = 0;
+    //是增加子计划还是编辑
     private boolean isEdit = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,7 +227,8 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
         subPlanSeekBar = (SeekBar)findViewById(R.id.subplan_progress_seekbar);
         seekPro = (TextView)findViewById(R.id.subplan_detail_progress);
         seekPro.setTypeface(getFZXiYuanFont());
-        seekPro.setText(0 + "");
+        subPlanSeekBar.setProgress(100);
+        seekPro.setText(100 + "");
         subPlanSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -402,12 +406,16 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
                         return;
                     }
                 }
-                subPlanID = subPlans.size()+1;
                 SubPlan subPlan = new SubPlan();
+                if (!isEdit){
+                    subPlanID = subPlans.size()+1;
+
+                }
+                Log.e("parentId",parentId+"<>"+subPlanID);
                 subPlan.setId(subPlanID);
                 subPlan.setParentId(parentId);
                 subPlan.setContent(subPlanEdit.getText().toString());
-                subPlan.setProgress(planProgress);
+                subPlan.setWeight(planProgress);
                 subPlan.setStartDateMilli(startMilliTime);
                 subPlan.setEndDateMilli(endMilliTime);
                 try{
@@ -427,15 +435,41 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
 
                 break;
             case R.id.delete_sub_plan:
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("提示");
+                alert.setMessage("确定要删除吗?");
+                alert.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            subPlanDao.deleteBySubPlanID(subPlanID);
+                            subPlans.clear();
+                            subPlans = subPlanDao.findAllByParentID(parentId);
+                            subPlanAdapter.notifyDataSetChanged();
+                            toast("删除成功!");
+                        } catch (Exception e){
+                            toast("删除失败!");
+                        }
+                    }
+                });
+                alert.setNegativeButton("取消", null);
+                alert.setCancelable(true);
+                alert.create().show();
                 break;
         }
     }
+   /* private void addSubPlan(SubPlan subPlan,boolean isEdit){
+
+    }*/
     private void showPop(){
         popManagerLayout.startAnimation(bottomIn);
         popManagerLayout.setVisibility(View.VISIBLE);
         transView.setVisibility(View.VISIBLE);
 
+        subPlanEdit.setText("");
+
     }
+    //编辑子计划
     private void showPop(SubPlan subPlan){
         isEdit = true;
         popManagerLayout.startAnimation(bottomIn);
@@ -445,13 +479,20 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
         subPlanEdit.setText(subPlan.getContent());
         subStartDate.setText(formater.format(subPlan.getStartDateMilli()));
         subEndDate.setText(formater.format(subPlan.getEndDateMilli()));
-        subPlanSeekBar.setProgress(subPlan.getProgress());
+        subPlanSeekBar.setProgress(subPlan.getWeight());
+
+        planProgress = subPlan.getProgress();
+        subPlanID = subPlan.getId();
+        parentId = subPlan.getParentId();
+        startMilliTime = subPlan.getStartDateMilli();
+        endMilliTime = subPlan.getEndDateMilli();
     }
     private void hidePop(boolean isNeededToClear){
         popManagerLayout.startAnimation(bottomOut);
         popManagerLayout.setVisibility(View.GONE);
         transView.setVisibility(View.GONE);
 
+        isEdit = false;
         if (isNeededToClear){
             popClear();
         }

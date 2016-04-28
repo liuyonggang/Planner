@@ -119,6 +119,7 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
         if (planDao.exists(plan.getProjectID())){
             planId = plan.getProjectID();
             isEdit = true;
+            deleteBtn.setVisibility(View.VISIBLE);
             contentEditView.setText(plan.getName());
             goalEditView.setText(plan.getGoal());
             projectStatusSp.setSelection(plan.getStatus());
@@ -160,6 +161,7 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
          */
         completeBtn = (FloatingActionButton)findViewById(R.id.plan_complete);
         deleteBtn  = (FloatingActionButton)findViewById(R.id.plan_delete);
+        deleteBtn.setVisibility(View.GONE);
         //breakdownBtn = (FloatingActionButton)findViewById(R.id.plan_breakdown);
         //breakdownBtn.setOnClickListener(this);
         completeBtn.setOnClickListener(this);

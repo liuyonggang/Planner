@@ -11,6 +11,15 @@ public class SubPlan extends BaseModel{
     long startDateMilli;//开始时间戳
     long endDateMilli;//结束时间戳
     int progress;//计划进度
+    int weight;//占总任务比
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
 
     public int getId() {
         return id;

@@ -22,9 +22,10 @@ public class SubPlanDao extends BaseDao{
     public static final String COLUMN_SubPlanStartDate = "subPlanStartDate";
     public static final String COLUMN_SubPlanEndDate = "subPlanEndDate";
     public static final String COLUMN_SubPlanWeight= "subPlanWeight";
+    public static final String COLUMN_SubPlanProgress = "subPlanProgress";
 
     public static final String[] COLUMNS = {
-            COLUMN_SubPlanID,COLUMN_SubPlanName,COLUMN_SubPlanParentID,COLUMN_SubPlanStartDate,COLUMN_SubPlanEndDate,COLUMN_SubPlanWeight
+            COLUMN_SubPlanID,COLUMN_SubPlanName,COLUMN_SubPlanParentID,COLUMN_SubPlanStartDate,COLUMN_SubPlanEndDate,COLUMN_SubPlanWeight,COLUMN_SubPlanProgress
     };
 
     public static final String CREATE_SQL = "CREATE TABLE " + TABLE_NAME + " ("
@@ -33,7 +34,8 @@ public class SubPlanDao extends BaseDao{
             + COLUMN_SubPlanParentID + " INTEGER,"
             + COLUMN_SubPlanStartDate + " TEXT,"
             + COLUMN_SubPlanEndDate + " TEXT,"
-            + COLUMN_SubPlanWeight + " INTEGER)";
+            + COLUMN_SubPlanWeight + " INTEGER,"
+            + COLUMN_SubPlanProgress + " INTEGER)";
 
     SQLiteDatabase db;
     public SubPlanDao(SQLiteDatabase db){
@@ -44,7 +46,7 @@ public class SubPlanDao extends BaseDao{
         List<SubPlan> list = new ArrayList<>();
         try{
             Cursor c = db.query(TABLE_NAME,COLUMNS,COLUMN_SubPlanParentID + "= ?",
-                    new String[]{String.valueOf(parentID)},null,null,COLUMN_SubPlanID + " desc");
+                    new String[]{String.valueOf(parentID)},null,null,COLUMN_SubPlanID + " asc");
             while (c.moveToNext()){
                 SubPlan sp = new SubPlan();
                 sp.setId(c.getInt(c.getColumnIndex(COLUMN_SubPlanID)));
@@ -52,7 +54,8 @@ public class SubPlanDao extends BaseDao{
                 sp.setParentId(c.getInt(c.getColumnIndex(COLUMN_SubPlanParentID)));
                 sp.setStartDateMilli(c.getLong(c.getColumnIndex(COLUMN_SubPlanStartDate)));
                 sp.setEndDateMilli(c.getLong(c.getColumnIndex(COLUMN_SubPlanEndDate)));
-                sp.setProgress(c.getInt(c.getColumnIndex(COLUMN_SubPlanWeight)));
+                sp.setWeight(c.getInt(c.getColumnIndex(COLUMN_SubPlanWeight)));
+                sp.setProgress(c.getInt(c.getColumnIndex(COLUMN_SubPlanProgress)));
                 list.add(sp);
             }
             c.close();
@@ -66,7 +69,7 @@ public class SubPlanDao extends BaseDao{
         try{
             Cursor c = db.query(TABLE_NAME,COLUMNS,COLUMN_SubPlanParentID + "= ?",
                     new String[]{String.valueOf(parentID)},null,null,COLUMN_SubPlanID + " desc");
-            Log.e("SubPlanSize",c.getCount()+"");
+            Log.e("SubPlanSize", c.getCount() + "");
             return c.getCount();
         }catch (Exception e){
             return 0;
@@ -84,7 +87,8 @@ public class SubPlanDao extends BaseDao{
             sp.setParentId(c.getInt(c.getColumnIndex(COLUMN_SubPlanParentID)));
             sp.setStartDateMilli(c.getLong(c.getColumnIndex(COLUMN_SubPlanStartDate)));
             sp.setEndDateMilli(c.getLong(c.getColumnIndex(COLUMN_SubPlanEndDate)));
-            sp.setProgress(c.getInt(c.getColumnIndex(COLUMN_SubPlanWeight)));
+            sp.setWeight(c.getInt(c.getColumnIndex(COLUMN_SubPlanWeight)));
+            sp.setProgress(c.getInt(c.getColumnIndex(COLUMN_SubPlanProgress)));
         }
         c.close();
         return sp;
@@ -100,7 +104,8 @@ public class SubPlanDao extends BaseDao{
         values.put(COLUMN_SubPlanParentID,sp.getParentId());
         values.put(COLUMN_SubPlanStartDate,sp.getStartDateMilli());
         values.put(COLUMN_SubPlanEndDate,sp.getEndDateMilli());
-        values.put(COLUMN_SubPlanWeight, sp.getProgress());
+        values.put(COLUMN_SubPlanWeight, sp.getWeight());
+        values.put(COLUMN_SubPlanProgress, sp.getProgress());
 
         if (exist(sp.getId())){
             String where = COLUMN_SubPlanID + "= ?";
@@ -122,6 +127,21 @@ public class SubPlanDao extends BaseDao{
         String[] arg = {String.valueOf(parentID)};
         return db.delete(TABLE_NAME,where,arg);
     }
+
+/*    public int getParentProgress(int parentID){
+        int sum = 0;
+        String checkSQL = "select sum(subPlanWeight) from subplan where subPlanParentID="+parentID;
+        Cursor c = db.rawQuery(checkSQL,null);
+        Log.e("SUM-1",c.getCount()+"11111");
+        if (c != null){
+            while (c.moveToNext()){
+                sum = c.getInt(0);
+
+            }
+        }
+        Log.e("SUM",sum+"");
+        return sum;
+    }*/
 
     public boolean exist(int subplanID){
         return findBySubPlanID(subplanID) != null;

@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="fitXY"
-                android:src="@drawable/img_fight"
+                android:src="@drawable/rose"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.5"/>
 
@@ -61,7 +61,10 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/size_16dp"
+                android:layout_marginLeft="@dimen/size_8dp"
+                android:layout_marginRight="@dimen/size_8dp"
+                android:layout_marginTop="@dimen/size_16dp"
+                android:layout_marginBottom="@dimen/size_16dp"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="4dp">
                 <LinearLayout
@@ -70,14 +73,24 @@
                     android:layout_marginTop="@dimen/size_16dp"
                     android:layout_marginBottom="@dimen/size_16dp"
                     android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/plan_detail_subplan"
+                        android:layout_marginLeft="@dimen/size_16dp"
+                        android:layout_marginRight="@dimen/size_16dp"
+                        android:textSize="@dimen/size_16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="@dimen/size_14sp"
                             android:text="@string/plan_progress_display"
                             android:textColor="@color/fontblack"/>
                         <TextView
@@ -92,6 +105,35 @@
                             android:textSize="@dimen/size_12sp"
                             android:textColor="@color/black"
                             android:text="%"/>
+                        <LinearLayout
+                            android:id="@+id/parent_progress_layout"
+                            android:visibility="gone"
+                            android:layout_marginLeft="@dimen/size_12dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/size_14sp"
+                            android:text="@string/plan_total_progress"
+                            android:textColor="@color/fontblack"/>
+                        <TextView
+                            android:id="@+id/plan_detail_parentProgress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/size_8dp"
+                            android:textSize="@dimen/size_24sp"
+                            android:textColor="@color/colorAccent"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/size_12sp"
+                            android:textColor="@color/black"
+                            android:text="%"/>
+                            </LinearLayout>
                     </LinearLayout>
 
                     <android.support.v7.widget.AppCompatSeekBar
