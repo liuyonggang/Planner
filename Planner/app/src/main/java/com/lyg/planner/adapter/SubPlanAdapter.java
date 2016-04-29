@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lyg.planner.Activity.PlanDetailActivity;
@@ -36,11 +38,13 @@ public class SubPlanAdapter extends Adapter{
     List<SubPlan> subPlans;
     View.OnClickListener listener;
     OnItemClickListener onItemClickListener;
-    public SubPlanAdapter(Context context, List<SubPlan> subPlans,OnItemClickListener onItemClickListener){
+    boolean hasSetTime;
+    public SubPlanAdapter(Context context, List<SubPlan> subPlans,OnItemClickListener onItemClickListener,boolean hasSetTime){
         super(context);
         this.mContext = context;
         this.subPlans = subPlans;
         this.onItemClickListener = onItemClickListener;
+        this.hasSetTime = hasSetTime;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,10 +61,12 @@ public class SubPlanAdapter extends Adapter{
         SubPlanHolder subPlanHolder = (SubPlanHolder)holder;
         subPlanHolder.subPlanNo.setText(position + 1 + "");
         subPlanHolder.subPlanContent.setText(subPlan.getContent());
-        subPlanHolder.subPlanWeight.setText(subPlan.getWeight()+"");
-        subPlanHolder.subPlanStartDate.setText(formater.format(subPlan.getStartDateMilli()));
-        subPlanHolder.subPlanEndDate.setText(formater.format(subPlan.getEndDateMilli()));
-        subPlanHolder.subPlanTotalTime.setText("总计:" + AppUtil.getTotalDays(subPlan.getStartDateMilli(), subPlan.getEndDateMilli()));
+        if (!hasSetTime){
+            subPlanHolder.subPlanWeight.setText(subPlan.getWeight()+"");
+            subPlanHolder.subPlanStartDate.setText(formater.format(subPlan.getStartDateMilli()));
+            subPlanHolder.subPlanEndDate.setText(formater.format(subPlan.getEndDateMilli()));
+            subPlanHolder.subPlanTotalTime.setText("总计:" + AppUtil.getTotalDays(subPlan.getStartDateMilli(), subPlan.getEndDateMilli()));
+        }
         subPlanHolder.subPlanCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,6 +84,8 @@ public class SubPlanAdapter extends Adapter{
         TextView subPlanNo,subPlanContent,subPlanStartDate,subPlanEndDate,subPlanArrowIc,subPlanWeight,subPlanTotalTime;
         CardView subPlanCardView;
         OnItemClickListener onItemClickListener;
+        RelativeLayout subPlanTimeLayout;
+        TextView symbol;
         public SubPlanHolder(View itemView) {
             super(itemView);
             subPlanNo = (TextView)itemView.findViewById(R.id.sub_plan_No);
@@ -90,8 +98,19 @@ public class SubPlanAdapter extends Adapter{
             subPlanArrowIc.setTypeface(iconFont);
             subPlanWeight = (TextView)itemView.findViewById(R.id.subplan_percent);
             subPlanWeight.setTypeface(xiyuanFont);
+
             subPlanTotalTime = (TextView)itemView.findViewById(R.id.sub_plan_totaltime);
             subPlanCardView = (CardView)itemView.findViewById(R.id.sub_plan_edit_cardview);
+            symbol = (TextView)itemView.findViewById(R.id.subplan_percent_symbol);
+            subPlanTimeLayout = (RelativeLayout)itemView.findViewById(R.id.subplan_time);
+
+            if (hasSetTime){
+                subPlanContent.setGravity(Gravity.CENTER_VERTICAL);
+                subPlanTimeLayout.setVisibility(View.GONE);
+                subPlanWeight.setVisibility(View.GONE);
+                symbol.setVisibility(View.GONE);
+                subPlanTotalTime.setVisibility(View.GONE);
+            }
 
         }
 

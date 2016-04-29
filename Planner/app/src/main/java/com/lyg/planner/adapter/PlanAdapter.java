@@ -148,10 +148,12 @@ public class PlanAdapter extends Adapter{
 
                 projectViewHolder.planDtProgressBar.setProgress(finalProgress);
                 projectViewHolder.planDtProgress.setText(finalProgress + "%");
+               // projectViewHolder.subPlanLayout.setBackgroundColor(mContext.getResources().getColor(R.color.orange_red));
                 projectViewHolder.projectBaseLayout.setCardBackgroundColor(mContext.getResources().getColor(R.color.blue_green));
             }else {
                 projectViewHolder.planDtProgressBar.setProgress(100);
                 projectViewHolder.planDtProgress.setText("100%");
+               // projectViewHolder.subPlanLayout.setBackgroundColor(mContext.getResources().getColor(R.color.orange_red));
                 projectViewHolder.projectBaseLayout.setCardBackgroundColor(mContext.getResources().getColor(R.color.orange_red));
             }
             //子任务
@@ -162,7 +164,8 @@ public class PlanAdapter extends Adapter{
                         SubPlan subPlan = subPlans.get(i);
                         int subPlanPro =  subPlan.getProgress();
                         if (subPlanPro < 100){
-                            projectViewHolder.subPlanName.setText(subPlan.getId()+"."+subPlan.getContent());
+                            projectViewHolder.subPlanNum.setText(subPlan.getId()+". ");
+                            projectViewHolder.subPlanName.setText(subPlan.getContent());
                             mSubPlan = subPlan;
                             return;
                         }
@@ -193,7 +196,7 @@ public class PlanAdapter extends Adapter{
     class  PlanViewHolder extends RecyclerView.ViewHolder{
 
         TextView aothText,projectContent,projectArrowDateIcon,projectEndDate,projectStatus
-                ,projectStartDate,subPlanIc,subPlanName;
+                ,projectStartDate,subPlanNum,subPlanName;
 
         android.support.v7.widget.CardView projectBaseLayout;
         ProgressBar planProgressBar,planDtProgressBar;
@@ -228,8 +231,8 @@ public class PlanAdapter extends Adapter{
 
             //展示子任务
             subPlanLayout = (RelativeLayout)view.findViewById(R.id.sub_plan_layout);
-            subPlanIc = (TextView)view.findViewById(R.id.sub_plan_ic);
-            subPlanIc.setTypeface(newIcFont);
+            subPlanNum = (TextView)view.findViewById(R.id.sub_plan_num);
+            //subPlanNum.setTypeface(xiyuanFont);
             subPlanName = (TextView)view.findViewById(R.id.sub_plan_display);
 
             //任务和时间进度条

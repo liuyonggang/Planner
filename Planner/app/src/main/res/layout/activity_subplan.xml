@@ -25,9 +25,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/size_16dp">
                 <LinearLayout
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/parent_plan_content"
@@ -38,6 +40,7 @@
                         android:textSize="@dimen/size_18sp"/>
                     <!--时间-->
                     <RelativeLayout
+                        android:id="@+id/show_subplan_time_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"

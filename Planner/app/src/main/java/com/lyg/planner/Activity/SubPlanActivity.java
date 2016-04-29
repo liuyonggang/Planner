@@ -84,6 +84,7 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
     private long parentStartMilliDate,parentEndMilliDate;
     private TextView parentPlanContent,parentPlanStartTime,parentPlanEndTime,parentPlanArrowIc,parentPlanTotalTime;
     private String addPlanStartTime;
+    private boolean hasSetTime = false;
     //已分配进度总和
     private int planProgressTotal = 0;
     private int delayProgress = 100;//剩余进度
@@ -95,10 +96,15 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
     private int subPlanID = 0;
     //是增加子计划还是编辑
     private boolean isEdit = false;
+    //控制控件显示
+    private RelativeLayout showSubPlanTimeLayout;
+    private LinearLayout addSubPlanTimeLayout,addSubPlanWeightLayout;
+    private TextView titleView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subplan);
+
         /**
          * set title and back arrow
          */
@@ -124,6 +130,11 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
         parentPlanArrowIc = (TextView)findViewById(R.id.parentplan_arrowdate_icon);
         parentPlanTotalTime = (TextView)findViewById(R.id.parentPlanTotalTime);
 
+        showSubPlanTimeLayout = (RelativeLayout)findViewById(R.id.show_subplan_time_layout);
+        addSubPlanTimeLayout = (LinearLayout)findViewById(R.id.add_subplan_timeshow);
+        addSubPlanWeightLayout = (LinearLayout)findViewById(R.id.show_time_weightlayout);
+        titleView = (TextView)findViewById(R.id.title_bottom);
+
         parentPlanArrowIc.setTypeface(getIconFont());
         parentPlanEndTime.setTypeface(getFZXiYuanFont());
         parentPlanStartTime.setTypeface(getFZXiYuanFont());
@@ -131,22 +142,26 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
         //尝试接受信息
         try{
             Intent intent = this.getIntent();
-            parentId = intent.getIntExtra("planId",0);
+            parentId = intent.getIntExtra("planId", 0);
             parentPlan = intent.getStringExtra("planContent");
             parentStartMilliDate = intent.getLongExtra("planStartTime", 0l);
             parentEndMilliDate = intent.getLongExtra("planEndTime", 0l);
-
-            startMilliTime = parentStartMilliDate;
-            endMilliTime = parentEndMilliDate;
+            hasSetTime = intent.getBooleanExtra("hasSetTimeType",false);
 
             parentPlanContent.setText(parentPlan);
+            if (hasSetTime){
+                showSubPlanTimeLayout.setVisibility(View.GONE);
+                parentPlanTotalTime.setText("时间&进度:待定");
+            }else {
+                startMilliTime = parentStartMilliDate;
+                endMilliTime = parentEndMilliDate;
+                addPlanStartTime = formater.format(parentStartMilliDate);
+                parentPlanStartTime.setText(formater.format(parentStartMilliDate));
+                parentPlanEndTime.setText(formater.format(parentEndMilliDate));
+                parentPlanTotalTime.setText("时间:" + AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate) +
+                        "/"+ AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate)+"  进度:" + (100-planProgressTotal)+"%");
+            }
 
-            addPlanStartTime = formater.format(parentStartMilliDate);
-            parentPlanStartTime.setText(formater.format(parentStartMilliDate));
-            parentPlanEndTime.setText(formater.format(parentEndMilliDate));
-
-            parentPlanTotalTime.setText("时间:" + AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate) +
-                    "/"+ AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate)+"  进度:" + (100-planProgressTotal)+"%");
         }catch (Exception e){
             toast("数据为空");
         }
@@ -181,7 +196,7 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
             public void onItemClick(int position) {
                 showPop(subPlans.get(position));
             }
-        });
+        },hasSetTime);
         subPlanList.setAdapter(subPlanAdapter);
 
         //仿PopupWindow
@@ -249,6 +264,11 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
         //操作按钮
         addLayout = (LinearLayout)findViewById(R.id.add_sub_plan_done);
         deleteLayout = (LinearLayout)findViewById(R.id.delete_sub_plan);
+        if (isEdit){
+            deleteLayout.setVisibility(View.VISIBLE);
+        }else {
+            deleteLayout.setVisibility(View.GONE);
+        }
         addLayout.setOnClickListener(this);
         deleteLayout.setOnClickListener(this);
     }
@@ -374,38 +394,40 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
                     Snackbar.make(v, "请输入计划", Snackbar.LENGTH_LONG).show();
                     return;
                 }
-                if (planProgress == 0){
-                    //toast("请设置进度");
-                    Snackbar.make(v, "请设置进度", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-
-                if (planProgressTotal > 100){
-                    Snackbar.make(v, "总进度已分配完!", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-                if (startMilliTime == endMilliTime){
-                    Snackbar.make(v, "起始时间和结束时间相等,毫无意义!", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-                if (startMilliTime > endMilliTime){
-                    Snackbar.make(v, "起始时间晚于结束时间,毫无意义!", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-                if(planProgress > delayProgress ){
-                    Snackbar.make(v, "当前进度大于剩余总进度!", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-
-                planProgressTotal += planProgress;
-
-                if (endMilliTime == parentEndMilliDate){
-                    if (planProgressTotal < 100){
-                        //toast("时间已分配完,但所占总进度不到100");
-                        Snackbar.make(v, "时间已分配完,但总进度不到100%", Snackbar.LENGTH_LONG).show();
+                if (!hasSetTime){
+                    if (planProgress == 0){
+                        //toast("请设置进度");
+                        Snackbar.make(v, "请设置进度", Snackbar.LENGTH_LONG).show();
                         return;
                     }
+
+                    if (planProgressTotal > 100){
+                        Snackbar.make(v, "总进度已分配完!", Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (startMilliTime == endMilliTime){
+                        Snackbar.make(v, "起始时间和结束时间相等,毫无意义!", Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+                    if (startMilliTime > endMilliTime){
+                        Snackbar.make(v, "起始时间晚于结束时间,毫无意义!", Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+                    if(planProgress > delayProgress ){
+                        Snackbar.make(v, "当前进度大于剩余总进度!", Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+                    planProgressTotal += planProgress;
+
+                    if (endMilliTime == parentEndMilliDate){
+                        if (planProgressTotal < 100){
+                            //toast("时间已分配完,但所占总进度不到100");
+                            Snackbar.make(v, "时间已分配完,但总进度不到100%", Snackbar.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
                 }
+
                 SubPlan subPlan = new SubPlan();
                 if (!isEdit){
                     subPlanID = subPlans.size()+1;
@@ -415,18 +437,23 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
                 subPlan.setId(subPlanID);
                 subPlan.setParentId(parentId);
                 subPlan.setContent(subPlanEdit.getText().toString());
-                subPlan.setWeight(planProgress);
-                subPlan.setStartDateMilli(startMilliTime);
-                subPlan.setEndDateMilli(endMilliTime);
+                if (!hasSetTime){
+                    subPlan.setWeight(planProgress);
+                    subPlan.setStartDateMilli(startMilliTime);
+                    subPlan.setEndDateMilli(endMilliTime);
+                }
+
                 try{
                     subPlanDao.save(subPlan);
                     toast("保存成功");
 
                     subPlans.add(subPlan);
                     subPlanAdapter.notifyDataSetChanged();
-                    delayProgress = 100-planProgressTotal;
-                    parentPlanTotalTime.setText("时间:" + AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate) + "/" +
-                            AppUtil.getTotalDays(endMilliTime, parentEndMilliDate) + "  进度:" + delayProgress + "%");
+                    if (!hasSetTime){
+                        delayProgress = 100-planProgressTotal;
+                        parentPlanTotalTime.setText("时间:" + AppUtil.getTotalDays(parentStartMilliDate, parentEndMilliDate) + "/" +
+                                AppUtil.getTotalDays(endMilliTime, parentEndMilliDate) + "  进度:" + delayProgress + "%");
+                    }
                     hidePop(true);
                 }catch (Exception e){
                     toast("保存失败");
@@ -458,14 +485,23 @@ public class SubPlanActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
-   /* private void addSubPlan(SubPlan subPlan,boolean isEdit){
+    /* private void addSubPlan(SubPlan subPlan,boolean isEdit){
 
-    }*/
+     }*/
     private void showPop(){
         popManagerLayout.startAnimation(bottomIn);
         popManagerLayout.setVisibility(View.VISIBLE);
         transView.setVisibility(View.VISIBLE);
 
+        if (hasSetTime){
+            titleView.setVisibility(View.VISIBLE);
+            addSubPlanTimeLayout.setVisibility(View.GONE);
+            addSubPlanWeightLayout.setVisibility(View.GONE);
+        }else {
+            addSubPlanTimeLayout.setVisibility(View.VISIBLE);
+            addSubPlanWeightLayout.setVisibility(View.VISIBLE);
+            titleView.setVisibility(View.GONE);
+        }
         subPlanEdit.setText("");
 
     }

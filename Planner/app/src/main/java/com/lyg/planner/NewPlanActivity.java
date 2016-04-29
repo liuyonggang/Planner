@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -79,6 +80,10 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
     private int planId = 0;
     private SharedPreferences sharedPreferences;
     private final static int NEW_PLAN = 1000;
+    private LinearLayout timeTypeLayout;
+    private TextView timeTypeTextView,timeTitle;
+    private boolean hasSetTimeType = false;
+    private LinearLayout showTimeLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +153,12 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
 
         projectStatusSp = (Spinner)findViewById(R.id.project_status);
         planPriority = (Spinner)findViewById(R.id.plan_priority);
+        //更改时间类型
+        timeTypeLayout = (LinearLayout)findViewById(R.id.new_plan_time_type_layout);
+        timeTypeTextView = (TextView)findViewById(R.id.new_plan_time_type);
+        timeTypeLayout.setOnClickListener(this);
+        timeTitle = (TextView)findViewById(R.id.new_plan_time);
+        showTimeLayout = (LinearLayout)findViewById(R.id.show_time_layout);
 
         projectStartTime.setTypeface(getFZXiYuanFont());
         projectEndTime.setTypeface(getFZXiYuanFont());
@@ -247,8 +258,10 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
                     plan.setGoal(goalEditView.getText().toString());
                     plan.setStatus(projectStatusSp.getSelectedItemPosition());
                     plan.setPlanType(planPriority.getSelectedItemPosition());
-                    plan.setStartDate(startMilliTime);
-                    plan.setEndDate(endMilliTime);
+                    if (!hasSetTimeType){
+                        plan.setStartDate(startMilliTime);
+                        plan.setEndDate(endMilliTime);
+                    }
                     plan.setPlanType(planPriority.getSelectedItemPosition());
                     plan.setProjectID(planId);
                     if (!isEdit){
@@ -385,9 +398,27 @@ public class NewPlanActivity extends BaseActivity implements View.OnClickListene
                 Intent intent = new Intent(this,SubPlanActivity.class);
                 intent.putExtra("planId",planId);
                 intent.putExtra("planContent", contentEditView.getText().toString());
-                intent.putExtra("planStartTime", startMilliTime);
-                intent.putExtra("planEndTime", endMilliTime);
+                intent.putExtra("hasSetTimeType", hasSetTimeType);
+                if (!hasSetTimeType){
+                    intent.putExtra("planStartTime", startMilliTime);
+                    intent.putExtra("planEndTime", endMilliTime);
+                }
                 startActivityForResult(intent,NEW_PLAN);
+                break;
+            case R.id.new_plan_time_type_layout:
+                if (hasSetTimeType){
+                    hasSetTimeType = false;
+                    timeTypeLayout.setBackgroundResource(R.drawable.oval_bg_press_shape);
+                    timeTypeTextView.setText("即时");
+                    showTimeLayout.setVisibility(View.VISIBLE);
+                    timeTitle.setText("时间("+AppUtil.getTotalDays(startMilliTime,endMilliTime)+")");
+                }else {
+                    hasSetTimeType = true;
+                    timeTypeTextView.setText("将来");
+                    showTimeLayout.setVisibility(View.GONE);
+                    timeTypeLayout.setBackgroundResource(R.drawable.oval_bg_normal_shape);
+                    timeTitle.setText("时间(待定)");
+                }
                 break;
         }
     }

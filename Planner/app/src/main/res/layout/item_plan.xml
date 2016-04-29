@@ -59,35 +59,39 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="@dimen/size_8dp"/>
 
-
         <!--当前进度中的子任务-->
         <RelativeLayout
             android:id="@+id/sub_plan_layout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
-            >
+            android:elevation="2dp">
+            <!--<ImageView
+                android:id="@+id/ic_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_keyboard_tab_24dp"/>-->
             <TextView
-                android:id="@+id/sub_plan_ic"
+                android:id="@+id/sub_plan_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ic_right_arrow"
                 android:textColor="@color/white"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:textSize="20sp"
+                android:textSize="14sp"
                  />
             <TextView
                 android:id="@+id/sub_plan_display"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="14 学习JAVA反射机制"
+                android:text="学习JAVA反射机制"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/sub_plan_ic"
-                 />
+                android:layout_toRightOf="@id/sub_plan_num"/>
         </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 
 import com.lyg.planner.adapter.MainViewPagerAdapter;
 import com.lyg.planner.fragment.MainDailyFragment;
+import com.lyg.planner.fragment.MainNotesFragment;
 import com.lyg.planner.fragment.MainPlanFragment;
 import com.lyg.planner.fragment.MainSummaryFragment;
 
@@ -109,14 +110,17 @@ public class MainActivity extends BaseActivity
         titles.add("计划");
         titles.add("日常");
         titles.add("日志");
+        titles.add("便签");
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(0)));
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(1)));
         mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(2)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(3)));
 
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new MainPlanFragment());
         fragments.add(new MainDailyFragment());
         fragments.add(new MainSummaryFragment());
+        fragments.add(new MainNotesFragment());
 
         MainViewPagerAdapter adapter =
                 new MainViewPagerAdapter(getSupportFragmentManager(),fragments,titles);

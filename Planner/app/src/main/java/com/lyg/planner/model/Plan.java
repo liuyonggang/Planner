@@ -61,7 +61,7 @@ public class Plan extends BaseModel{
         if (startDate < 0){return false;}
         if (endDate < 0){return  false;}
 
-        if (startDate > endDate){return false;}
+        //if (startDate > endDate){return false;}
 
         return true;
     }

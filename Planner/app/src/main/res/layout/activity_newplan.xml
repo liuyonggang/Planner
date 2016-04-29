@@ -116,13 +116,42 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/size_16dp"
                 android:orientation="vertical">
-                <!--title-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/secondfont"
-                    android:text="@string/plan_date_range"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <!--title-->
+                    <TextView
+                        android:id="@+id/new_plan_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondfont"
+                        android:text="@string/plan_date_range"/>
+                    <!--计划时间类型-->
+                    <LinearLayout
+                        android:id="@+id/new_plan_time_type_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:elevation="@dimen/size_4dp"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/oval_bg_selector">
+                    <TextView
+                        android:id="@+id/new_plan_time_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="@string/plan_now"
+                        android:textSize="@dimen/size_12sp"
+                        android:layout_marginTop="@dimen/size_4dp"
+                        android:layout_marginBottom="@dimen/size_4dp"
+                        android:layout_marginLeft="@dimen/size_16dp"
+                        android:layout_marginRight="@dimen/size_16dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
                 <LinearLayout
+                    android:id="@+id/show_time_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
